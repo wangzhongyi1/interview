@@ -31,4 +31,4 @@
 #### $route 和 $router 的区别
 
 1. $route 是从路由对象中获取path、query、param等路由参数
-2. $router 表示的是 VueRouter 的实例，可以使用路由跳转的方法 push()、back()、go()
+2. $router 表示的是 VueRouter 的实例，可以使用路由跳转的方法 push()、back()、go()等。
