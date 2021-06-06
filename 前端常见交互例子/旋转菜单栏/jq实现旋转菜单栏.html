@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旋转菜单栏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            outline: none;
+        }
+        
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #045, #002);
+        }
+        
+        .wrapper {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .wrapper label {
+            display: block;
+            border-radius: 50%;
+            background-color: #fff;
+            text-align: center;
+            color: #333;
+            position: absolute;
+            top: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            transition: all 1s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 0px;
+            height: 0px;
+            font-size: 0px;
+            opacity: 0;
+        }
+        
+        .wrapper.open label {
+            width: 80px;
+            height: 80px;
+            font-size: 16px;
+            opacity: 1;
+        }
+        
+        .wrapper input {
+            width: 0;
+            height: 0;
+        }
+        
+        .wrapper #btn {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            box-shadow: 0 0 14px #0cf inset;
+            background-color: transparent;
+            border: 0;
+            transition: all .3s ease;
+            color: #fff;
+        }
+        
+        .wrapper #btn:hover {
+            box-shadow: 0 0 14px #ff0 inset;
+        }
+        
+        .wrapper ul {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .wrapper ul li {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: absolute;
+            transition: all 1s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <ul>
+            <li>
+                <label><input type="checkbox">unit1</label>
+            </li>
+            <li>
+                <label><input type="checkbox">unit2</label>
+            </li>
+            <li>
+                <label><input type="checkbox">unit3</label>
+            </li>
+            <li>
+                <label><input type="checkbox">unit4</label>
+            </li>
+            <li>
+                <label><input type="checkbox">unit5</label>
+            </li>
+            <li>
+                <label><input type="checkbox">unit6</label>
+            </li>
+            <li>
+                <label><input type="checkbox">unit7</label>
+            </li>
+            <li>
+                <label><input type="checkbox">unit8</label>
+            </li>
+        </ul>
+
+        <button id="btn">click</button>
+    </div>
+
+    <script src="../jquery.min.js"></script>
+    <script>
+        var $wrapper = $('.wrapper');
+        var $lis = $('li');
+        var len = $lis.length;
+        var angle = 360 / len; // 旋转角度
+
+        $('#btn').on('click', function(e) {
+            change();
+        })
+
+        change();
+
+        function change() {
+            $wrapper.toggleClass('open')
+            for (let i = 0; i < len; i++) {
+                $wrapper.hasClass('open') ? rotate(angle * i + 'deg', i) : rotate('-360deg', i);
+            }
+        }
+
+        function rotate(l, i) {
+            $($lis[i]).css('transform', 'rotate(' + l + ')')
+                .find('label').css('transform', 'translateX(-50%) rotate(-' + l + ')')
+        }
+    </script>
+</body>
+
+</html>

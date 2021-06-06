@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>loading</title>
+  <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #f36b6e;
+    }
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .wrapper .left {
+
+    }
+    .wrapper .left h2{
+      font-size: 40px;
+      margin: 0;
+      color: #fffefc;
+    }
+    .wrapper .left h3{
+      color: #ffaaad;
+    }
+    .wrapper .right{
+      margin-left: 40px;
+      display: flex;
+    }
+    .wrapper .monster{
+      width: 120px;
+      height: 120px;
+      background-color: #fc7355;
+      border-radius: 24px;
+      box-shadow: 0 10px 10px rgba(0,0,0,.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      animation: bounce 2s ease-in-out infinite alternate;
+      position: relative;
+    }
+    .wrapper .monster::before{
+      position: absolute;
+      top: -10px;
+      content: '';
+      display: block;
+      width: 20px;
+      height: 10px;
+      background-color: #fff;
+      border-radius: 10px;
+      transform: rotate(45deg);
+    }
+    .wrapper .monster::after{
+      position: absolute;
+      top: -10px;
+      left: 48%;
+      content: '';
+      display: block;
+      width: 20px;
+      height: 10px;
+      background-color: #fff;
+      border-radius: 10px;
+      transform: rotate(-45deg);
+    }
+    .wrapper .monster .eye{
+      width: 60px;
+      height: 60px;
+      background-color: #fff;
+      border-radius: 50%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .wrapper .monster .eye .eyeBall{
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #033f7b;
+      animation: eyeBounce 2s ease-in-out infinite alternate; 
+    }
+    .wrapper .monster .mouth{
+      width: 50px;
+      height: 14px;
+      background-color: #fff;
+      border-radius: 14px;
+    }
+    .wrapper .monster.blue {
+      background-color: #024079;
+      margin-left: 20px;
+      animation-delay: 2s;
+    }
+    .wrapper .monster.blue .eye .eyeBall {
+      background-color: #f36b6e;
+    }
+    .wrapper .monster.blue .mouth {
+      background-color: #f36b6e;
+    }
+
+    .wrapper .page-loader {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-color: #024079;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .wrapper .page-loader .progress-w{
+      width: 200px;
+      height: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #fff;
+      margin-top: 50px;
+    }
+    .wrapper .page-loader .progress-w .progress{
+      height: 100%;
+      background-color: #fc7355;
+    }
+    .wrapper .page-loader.hide {
+      animation: loadingHide 2.4s ease forwards;
+    }
+    .wrapper .page-loader.hide > .monster {
+      animation: bounceAndhide 1.2s ease forwards;
+    }
+
+    @keyframes bounce {
+      from {
+        transform: translateY(0px);
+        box-shadow: 0 10px 10px rgba(0,0,0,.2);
+      }
+      to {
+        transform: translateY(-20px);
+        box-shadow: 0 60px 20px rgba(0,0,0,.2);
+      }
+    }
+    @keyframes eyeBounce {
+      0%,
+      10%{
+        transform: translateX(0px);
+      }
+      90%,
+      100% {
+        transform: translateX(30px);
+      }
+    }
+    @keyframes bounceAndhide {
+      from {
+        transform: rotate(0) scale(1);
+      }
+      to {
+        transform: rotate(360deg) scale(0);
+      }
+    }
+    @keyframes loadingHide {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+<div class="wrapper">
+
+  <div class="left">
+    <h2>We are</h2>
+    <h2>SQUARE</h2>
+    <h2>MONSTER!</h2>
+    <h3>Ahhhh We'll eat you</h3>
+  </div>
+
+  <div class="right">
+    <div class="monster">
+      <div class="eye">
+        <div class="eyeBall"></div>
+      </div>
+      <div class="mouth"></div>
+    </div>
+    <div class="monster blue">
+      <div class="eye">
+        <div class="eyeBall"></div>
+      </div>
+      <div class="mouth"></div>
+    </div>
+  </div>
+
+  <div class="page-loader">
+    <div class="monster">
+      <div class="eye">
+        <div class="eyeBall"></div>
+      </div>
+      <div class="mouth"></div>
+    </div>
+    <div class="progress-w">
+      <div class="progress"></div>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+  // 进度条到 100% 的时候蒙版消失
+  var page_loading = document.querySelector('.page-loader');
+  var progress = document.querySelector('.progress');
+  // 4800 / 100 = 48ms
+  var timer = null;
+  // 进度
+  var p = 0;
+
+  timer = setInterval(() => {
+    if (p === 100) {
+      clearInterval(timer);
+      timer = null;
+      page_loading.classList.add('hide');
+      return;
+    }
+    p++;
+    progress.style.width = p + '%';
+  }, 48);
+
+</script>
+</body>
+</html>

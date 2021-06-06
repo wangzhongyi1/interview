@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卡片翻转</title>
+    <style>
+        .wrapper ul {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .wrapper ul li {
+            margin-top: 100px;
+            width: 300px;
+            position: relative;
+            perspective: 1000px;
+        }
+        
+        .wrapper ul li:hover .img-w {
+            transform: rotateY(90deg);
+        }
+        
+        .wrapper ul li .img-w {
+            transition: all .6s ease-in-out;
+            transform: rotateY(0deg);
+        }
+        
+        .wrapper ul li .img-w img {
+            display: block;
+            width: 100%;
+        }
+        
+        .wrapper ul li:hover .con-w {
+            transform: rotateY(0deg);
+        }
+        
+        .wrapper ul li .con-w {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #fff;
+            transform: rotateY(90deg);
+            transition: all .6s ease-in-out;
+        }
+        
+        .wrapper ul li .con-w>span {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <ul>
+            <li>
+                <div class="img-w">
+                    <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=139031753,2358080121&fm=26&gp=0.jpg" alt="">
+                </div>
+                <div class="con-w">
+                    <span>今年过年前一定要把 webpack 基本配置学好</span>
+                    <span>要学习 webpack 底层 tabable AST语法树 </span>
+                </div>
+            </li>
+            <li>
+                <div class="img-w">
+                    <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=139031753,2358080121&fm=26&gp=0.jpg" alt="">
+                </div>
+                <div class="con-w">
+                    <span>今年过年前一定要把 webpack 学好</span>
+                    <span>要学习 webpack 底层 tabable AST </span>
+                </div>
+            </li>
+            <li>
+                <div class="img-w">
+                    <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=139031753,2358080121&fm=26&gp=0.jpg" alt="">
+                </div>
+                <div class="con-w">
+                    <span>今年过年前一定要把 webpack 学好</span>
+                    <span>要学习 webpack 底层 tabable AST </span>
+                </div>
+            </li>
+            <li>
+                <div class="img-w">
+                    <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=139031753,2358080121&fm=26&gp=0.jpg" alt="">
+                </div>
+                <div class="con-w">
+                    <span>今年过年前一定要把 webpack 学好</span>
+                    <span>要学习 webpack 底层 tabable AST </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</body>
+
+</html>

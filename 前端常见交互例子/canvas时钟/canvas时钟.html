@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas实现时钟</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <canvas id="can" width="800" height="600"></canvas>
+  </div>
+
+  <script>
+    /** @type {HTMLCanvasElement} */
+    var can = document.getElementById('can');
+    var ctx = can.getContext('2d');
+
+    function draw() {
+      ctx.clearRect(0, 0, 800, 600);
+      ctx.save();
+      // 画圆盘
+      ctx.beginPath();
+      ctx.arc(400, 300, 200, 0, 2 * Math.PI);
+      ctx.strokeStyle = '#999';
+      ctx.lineWidth = 10;
+      ctx.stroke();
+      ctx.closePath();
+
+      ctx.translate(400, 300);
+      ctx.save();
+      let angle = 0;
+      // 画数字 1~12
+      for (let k = 0; k < 12; k++) {
+        ctx.beginPath();
+        angle = Math.PI / 6 + angle;
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        let y = Math.sin(angle) * 150;
+        let x = y / Math.tan(angle);
+        ctx.fillText((k + 4) % 12 === 0 ? 12 : (k + 4) % 12, x, y);
+        ctx.stroke();
+        ctx.closePath();
+      }
+      // 画时钟刻度
+      for (let i = 0; i < 12; i++) {
+        ctx.beginPath();
+        ctx.rotate(2 * Math.PI / 12);
+        ctx.moveTo(180, 0);
+        ctx.lineTo(200, 0);
+        ctx.stroke();
+        ctx.closePath();
+      }
+      ctx.restore();
+      // 画分钟刻度
+      for (let j = 0; j < 60; j++) {
+        ctx.beginPath();
+        ctx.rotate(2 * Math.PI / 60);
+        ctx.moveTo(160, 0);
+        ctx.lineTo(200, 0);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.closePath();
+      }
+
+      var d = new Date();
+      var H = d.getHours();
+      var M = d.getMinutes();
+      var S = d.getSeconds();
+      // 画时针
+      ctx.save();
+      ctx.beginPath();
+      ctx.rotate((H - 3) * (2 * Math.PI / 12));
+      ctx.moveTo(0, 0);
+      ctx.lineTo(80, 0);
+      ctx.fill();
+      ctx.lineWidth = 5;
+      ctx.lineCap ="round"; // 两端圆滑
+      ctx.lineJoin = "round"; // 线连接出圆滑
+      ctx.stroke();
+      ctx.closePath();
+      // 画分针
+      ctx.restore();
+      ctx.save();
+      ctx.beginPath();
+      ctx.rotate((M - 15) * (2 * Math.PI / 60));
+      ctx.moveTo(0, 0);
+      ctx.lineTo(100, 0);
+      ctx.stroke();
+      ctx.closePath();
+      // 画秒针
+      ctx.restore();
+      ctx.save();
+      ctx.beginPath();
+      ctx.rotate((S - 15) * (2 * Math.PI / 60));
+      ctx.moveTo(0, 0);
+      ctx.lineTo(120, 0);
+      ctx.strokeStyle = 'red';
+      ctx.stroke();
+      ctx.closePath();
+      ctx.restore();
+      ctx.restore();
+    }
+
+    draw();
+    setInterval(() => {
+      draw();
+    }, 1000);
+
+
+  </script>
+</body>
+
+</html>

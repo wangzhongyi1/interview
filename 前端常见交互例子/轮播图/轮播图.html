@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>轮播图</title>
+  <style>
+    .wrapper {
+      width: 800px;
+      height: 400px;
+      /* outline: 1px solid red; */
+      overflow: hidden;
+      position: relative;
+    }
+
+    .box-w {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      cursor: pointer;
+      transform: translateX(-100%);
+    }
+
+    .box {
+      width: 100%;
+      height: 100%;
+      /* outline: 1px solid black; */
+      flex-shrink: 0;
+      /* 不缩小 */
+      font-size: 50px;
+      text-align: center;
+      line-height: 400px;
+    }
+
+    .dots {
+      /* width: 10%; */
+      height: 10%;
+      border-radius: 30%;
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(255,255,255,.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .dots > span {
+      width: 30px;
+      height: 30px;
+      margin-left: 5px;
+      margin-right: 5px;
+      border-radius: 50%;
+      background-color: rgba(0,0,0,.5);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .arrow {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0,0,0,.5);
+      font-size: 30px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .left-arrow {
+      left: 5%;
+    }
+
+    .right-arrow {
+      right: 5%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="box-w">
+      <div style="background-color: #41bb7e;" class="box">复制3</div>
+      <div style="background-color: #f40;" class="box">1</div>
+      <div style="background-color: #2177c7;" class="box">2</div>
+      <div style="background-color: #41bb7e;" class="box">3</div>
+      <div style="background-color: #f40;" class="box">复制1</div>
+      <!-- <div class="box">1</div> -->
+    </div>
+    <div class="dots">
+      <span>1</span>
+      <span>2</span>
+      <span>3</span>
+    </div>
+    <div class="arrow left-arrow">&lt;</div>
+    <div class="arrow right-arrow">&gt;</div>
+  </div>
+
+  <script>
+    var wrapper = document.querySelector('.wrapper'),
+      wrapperWidth = wrapper.offsetWidth,
+      boxw = document.querySelector('.box-w'),
+      countChildren = boxw.children.length - 2, // 子元素的数量
+      timer = null, // 定时器
+      timer2 = null, // 延时器
+      left = wrapperWidth, // 向左移动的距离
+      currIndex = 1; // 当前显示在屏幕中是第几张
+
+    // startInterval()
+    function startInterval() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        left += 10;
+        boxw.style.transform = `translateX(-${left}px)`;
+        // 在复制1 的时候迅速改变 left 值到 1 的位置(达到的效果就是完成复制1 走进来的过程，1走出去的过程)
+        if (left === (countChildren + 1) * wrapperWidth) {
+          left = wrapperWidth;
+          boxw.style.transform = `translateX(-${left}px)`;
+        }
+        // 达到完整显示一张图片的时候，停顿1s
+        if (left % wrapperWidth === 0) {
+          clearInterval(timer);
+          clearTimeout(timer2);
+          timer2 = setTimeout(() => {
+            startInterval();
+          }, 1000);
+        }
+      }, 20);
+    }
+
+
+  </script>
+</body>
+
+</html>

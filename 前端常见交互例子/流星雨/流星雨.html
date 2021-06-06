@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>流星雨</title>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      overflow: hidden;
+    }
+
+    .item {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(to right, rgb(150, 150, 150), #000);
+      position: absolute;
+      transform: rotate(-45deg);
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    var num = 200, wrap = document.createElement('div'), wrapChildren = wrap.children, speed = 10, randomArr = [], timer = null;
+
+    createElement();
+    function createElement() {
+      for (let i = 0; i < num; i++) {
+        let div = document.createElement('div');
+
+        div.classList.add('item');
+
+        // 生成一个随机数，改变每个 div 的 top left
+        const leftAndTopArr = fillRandomArr();
+
+        div.style.left = leftAndTopArr[0] + 'px';
+        div.style.top = leftAndTopArr[1] + 'px';
+
+        // randomArr.push([random1, random2])
+        randomArr[i] = [leftAndTopArr[0], leftAndTopArr[1]]
+
+        wrap.appendChild(div)
+      }
+      document.body.appendChild(wrap);
+    }
+
+    function fillRandomArr() {
+      const random1 = parseInt(Math.random() * 1920) + 400;
+      const random2 = parseInt(Math.random() * 1000) - 400;
+      return [random1, random2];
+    }
+
+    // 运动，判断是否运动出屏幕外，出屏幕外则销毁该元素
+    startInterval();
+    function startInterval() {
+      timer = setInterval(() => {
+        for (let j = 0; j < wrapChildren.length; j++) {
+          wrapChildren[j].style.top = Number(wrapChildren[j].style.top.slice(0, -2)) + speed + 'px'
+          wrapChildren[j].style.left = Number(wrapChildren[j].style.left.slice(0, -2)) - speed + 'px'
+          if (Number(wrapChildren[j].style.left.slice(0, -2)) < -30) {
+            // wrapChildren[j].style.left = randomArr[j][0] + 'px';
+            // wrapChildren[j].style.top = randomArr[j][1] + 'px';
+            const temp = fillRandomArr()
+            wrapChildren[j].style.left = temp[0] + 'px';
+            wrapChildren[j].style.top = temp[1] + 'px';
+          }
+        }
+      }, 60);
+    }
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拖拽</title>
+  <style>
+    .box {
+      width: 200px;
+      height: 200px;
+      background-color: red;
+      position: absolute;
+      left: 10px;
+      top: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box"></div>
+
+
+  <script>
+    var box = document.querySelector('.box');
+
+    function mousedown(e) {
+      var startX = e.pageX;
+      var startY = e.pageY;
+      var originX = this.offsetLeft; // 记录上一次移动结束后的位置
+      var originY = this.offsetTop; // 记录上一次移动结束后的位置
+
+      function mousemove(e2) {
+        var disX = e2.pageX - startX;
+        var disY = e2.pageY - startY;
+
+        box.style.left = originX + disX + 'px';
+        box.style.top = originY + disY + 'px';
+      }
+
+      function mouseup(e3) {
+        document.removeEventListener('mousemove', mousemove);
+      }
+
+      this.removeEventListener('mouseup', mouseup); // 清除上一次的 mouseup 事件
+      document.addEventListener('mousemove', mousemove);
+      this.addEventListener('mouseup', mouseup);
+    }
+
+    box.addEventListener('mousedown', mousedown);
+
+  </script>
+</body>
+
+</html>

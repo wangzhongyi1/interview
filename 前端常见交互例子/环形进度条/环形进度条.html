@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>环形进度条</title>
+  <style>
+    #canvas {
+      border: 1px solid red;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="canvas" width="400" height="400"></canvas>
+
+  <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var startAg = 0, endAg = 270;
+    var centerX = Math.floor(canvas.width / 2), centerY = Math.floor(canvas.height / 2);//圆心坐标
+    var r = 100, thick = 40, progressStartAg = 0, speed = 10;// r:半径, thick:环中间填充部分的宽度 progressStartAg:进度环形开始角度 speed:进度动画所需的速度
+
+    // 角度转弧度
+    function agToRadian(angle) {
+      return angle * Math.PI / 180
+    }
+
+    // 弧度转角度
+    function radianToAg(radian) {
+      return 180 * radian / Math.PI
+    }
+
+    ctx.translate(centerX, centerY);
+    ctx.rotate(agToRadian(90 + (360 - endAg) / 2));
+    ctx.save();
+
+    function jindu() {
+      ctx.restore();
+      ctx.save();
+
+      // 第一层，背景
+      ctx.beginPath();
+      ctx.clearRect(-200, -200, 400, 400);//每次开始画时，清除一下画布，防止锯齿严重
+      ctx.arc(0, 0, r, agToRadian(startAg), agToRadian(endAg), false);
+      ctx.arc(0, 0, r - thick, agToRadian(endAg), agToRadian(startAg), true);
+      ctx.lineTo(r, 0);//闭合
+      ctx.fillStyle = '#f3f3f3'
+      ctx.fill();
+      ctx.closePath();
+
+      // 第二层，展示进度
+      ctx.beginPath();
+      ctx.arc(0, 0, r, agToRadian(startAg), agToRadian(progressStartAg), false);
+      ctx.arc(0, 0, r - thick, agToRadian(progressStartAg), agToRadian(startAg), true);
+      ctx.lineTo(r, 0);//闭合
+      ctx.fillStyle = 'red'
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    var timer = setInterval(() => {
+
+      progressStartAg += speed
+      if (progressStartAg >= endAg) {
+        clearInterval(timer);
+      }
+
+      jindu();
+
+    }, 16.7);
+
+
+
+  </script>
+</body>
+
+</html>

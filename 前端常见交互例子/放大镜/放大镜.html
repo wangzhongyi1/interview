@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>放大镜</title>
+  <style>
+    .wrapper {
+      display: flex;
+    }
+
+    .smallbox {
+      position: relative;
+      width: 400px;
+      height: 255px;
+      background: url(./macbook-small.jpg) no-repeat top left/100% 100%;
+      outline: 2px solid red;
+    }
+
+    .bigbox {
+      margin-left: 20px;
+      width: 500px;
+      height: 300px;
+      background: url(./macbook-big.jpg) no-repeat 0 0;
+      outline: 2px solid red;
+    }
+
+    .mask {
+      /* width: 100px;
+      height: 100px; */
+      background-color: rgba(249, 204, 157, .4);
+      cursor: all-scroll;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="smallbox">
+      <div class="mask"></div>
+    </div>
+    <div class="bigbox"></div>
+  </div>
+
+  <script>
+    var smallbox = document.querySelector('.smallbox'),
+      bigbox = document.querySelector('.bigbox'),
+      maskbox = document.querySelector('.mask'),
+      bigImg = { x: 1024, y: 654 };
+
+
+    magnifier();
+    function magnifier() {
+
+      initMaskBox()
+      function initMaskBox () {
+        /**
+         * 计算 mask div 的宽高
+         * 
+         * maskWidth / smallboxWidth = bigWidth / bigImgWidth
+         * maskHeight / smallboxHeight = bigHeight / bigImgHeight
+         * 
+        */
+        const smallboxStyle = getEleWidthAndHeight(smallbox);
+        const bigboxStyle = getEleWidthAndHeight(bigbox);
+        let maskWidth = bigboxStyle.width / bigImg.x * smallboxStyle.width;
+        let maskHeight = bigboxStyle.height / bigImg.y * smallboxStyle.height;
+
+        maskbox.style.width = maskWidth + 'px';
+        maskbox.style.height = maskHeight + 'px';
+      }
+
+      smallbox.addEventListener('mousemove', function (e) {
+
+        /* 
+          maskbox 中心要和鼠标重合
+          但是 maskbox 不能超出 smallbox （边界处理）
+        */
+        const maskboxStyle = getEleWidthAndHeight(maskbox), 
+             smallboxStyle = getEleWidthAndHeight(smallbox),
+                    offset = getOffset(e);
+        let left = offset.offsetX - maskboxStyle.width / 2,
+             top = offset.offsetY - maskboxStyle.height / 2;
+        // 下面 4 个 if ，是防止 maskbox 超出 smallbox 的区域
+        if (left < 0) {
+          left = 0;
+        } 
+        if (left > smallboxStyle.width - maskboxStyle.width) {
+          left = smallboxStyle.width - maskboxStyle.width;
+        }
+        if (top < 0) {
+          top = 0;
+        }
+        if (top > smallboxStyle.height - maskboxStyle.height) {
+          top = smallboxStyle.height - maskboxStyle.height;
+        }
+
+        maskbox.style.left = left  + 'px';
+        maskbox.style.top = top + 'px';
+
+        /* 
+          计算 maskbox 对应的 bigbox 背景图的定位位置（放大区域）
+
+          maskboxLeft / smallboxWidth = bigImg左移距离 / bigImgWidth
+          maskboxTop / smallboxHeight = bigImg下移距离 / bigImgHeihgt
+        */
+        let bigImgX = left / smallboxStyle.width * bigImg.x,
+            bigImgY = top / smallboxStyle.height * bigImg.y;
+        bigbox.style.backgroundPosition = `-${bigImgX}px -${bigImgY}px`;
+
+      })
+
+      /**
+       * offsetX 和 offsetY 是相对于 (事件源对象) 而言的
+       * @description: 得到 maskbox 相对于 smallbox 的距离
+       * @param {*}
+       * @return {*}
+       */
+      function getOffset (e) {
+        var obj = {};
+        if (e.target === smallbox) {
+          obj.offsetX = e.offsetX;
+          obj.offsetY = e.offsetY
+        } else if(e.target === maskbox) {
+
+          const style = getComputedStyle(maskbox);
+          obj.offsetX = e.offsetX + parseFloat(style.left);
+          obj.offsetY = e.offsetY + parseFloat(style.top);
+        }
+        return obj;
+      }
+
+      /**
+       * @description: 获取传入的 dom 元素的宽高
+       * @param {*} ele dom 元素
+       * @return {width, height} 元素的宽高
+       */
+      function getEleWidthAndHeight(ele) {
+        const style = getComputedStyle(ele);
+        const width = parseFloat(style.width);
+        const height = parseFloat(style.height);
+        return {
+          width,
+          height
+        }
+      }
+
+
+    }
+
+
+  </script>
+</body>
+
+</html>

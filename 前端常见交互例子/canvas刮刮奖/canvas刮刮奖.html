@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas实现刮刮奖</title>
+  <style>
+    body {
+      margin-left: 200px;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 200px;
+      height: 100px;
+    }
+
+    .text {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <div class="text">谢谢惠顾</div>
+    <canvas width="200" height="100"></canvas>
+  </div>
+
+  <script>
+    var wrapper = document.querySelector('.wrapper');
+    var textDom = document.querySelector('.text');
+    var awards = [
+      { title: '一等奖', rate: 0.1 },
+      { title: '二等奖', rate: 0.2 },
+      { title: '三等奖', rate: 0.3 },
+      { title: '谢谢惠顾', rate: 0.4 }
+    ]
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ccc';
+    ctx.fillRect(0, 0, 200, 100);
+
+    ctx.font = "20px 微软雅黑";
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#fff';
+    ctx.fillText('刮刮卡', 100, 50);
+
+    ctx.globalCompositeOperation = 'destination-out' // 设置两个图形重叠的规则
+    // ctx.fillStyle = 'red';
+    // ctx.fillRect(50,50,50,50);
+    var flag = false;
+    canvas.addEventListener('mousedown', function (e) {
+      flag = true;
+    });
+    document.addEventListener('mousemove', function (e) {
+      if (flag) {
+        var x = e.pageX - wrapper.offsetLeft; // 因为下面 arc 中的 x 是相对于 canvas 的距离，所以需要减去
+        var y = e.pageY - wrapper.offsetTop;
+        ctx.arc(x, y, 10, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    });
+    document.addEventListener('mouseup', function (e) {
+      flag = false;
+    });
+
+    // 初始化奖项
+    function randomAward(awards) {
+      if (Array.isArray(awards)) {
+        var random = Math.random();
+        var newArr = awards.concat([]);
+        newArr.sort((a, b) => a.rate - b.rate);
+        var total = 0;
+        for (let i = 0; i < newArr.length; i ++) {
+          if (total + newArr[i].rate >= random) {
+            textDom.innerHTML = newArr[i].title; // 设置奖项的文字内容
+            return newArr[i]
+          } else {
+            total += newArr[i].rate;
+          }
+        }
+      }
+
+    }
+    randomAward(awards);
+
+
+  </script>
+</body>
+
+</html>

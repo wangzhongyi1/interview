@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日食播放器</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      /* 色相 饱和度 亮度 */
+      background: hsl(194, 66%, 49%);
+    }
+
+    .wrapper {
+      position: relative;
+      width: 70%;
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    .wrapper .title {
+      position: absolute;
+      color: #fff;
+      top: 100px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .wrapper .per {
+      position: absolute;
+      color: #fff;
+      top: 100px;
+      font-size: 20px;
+      font-weight: bold;
+      width: 100%;
+      text-align: center;
+    }
+
+    .wrapper .circle {
+      width: 20%;
+      padding-top: 20%;
+      border-radius: 50%;
+      position: absolute;
+      top: 30%;
+      left: 30%;
+    }
+
+    .wrapper .circle.sun {
+      background-color: #ffff77;
+      box-shadow: 0 0 50px #ffff77;
+    }
+
+    .wrapper .circle.moon {
+      left: 52%;
+      box-shadow: inset 0 0 50px #ffff77;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <audio controls>
+    <source src="./他只是经过.mp3" type="audio/mpeg">
+  </audio> -->
+  <audio src="./他只是经过.mp3" preload="auto"></audio>
+  <div class="wrapper">
+    <div class="title">拖动调节音量~</div>
+    <div class="per">Volume</div>
+    <div class="circle sun"></div>
+    <div class="circle moon"></div>
+  </div>
+
+  <script>
+    /**
+    * 1. 实现 X 轴的拖拽
+    * 2. 根据 left 和 直径 值判断重合
+    * 3. 重合长度 / 直径 设置音量
+    */
+    var obj = {
+      run: function () {
+        this.init();
+        this.drag();
+      },
+      init: function () {
+        // 初始化一些东西
+        this.audio = document.querySelector('audio');
+        this.sunEle = document.querySelector('.sun');
+        this.moonEle = document.querySelector('.moon');
+        this.circleWidth = this.sunEle.offsetWidth; // 半径长度
+        this.sunOffsetLeft = this.sunEle.offsetLeft; // sun offsetLeft 距离
+        this.body = document.body
+      },
+      drag: function () {
+
+        var startX, moveX, flag = false, offsetLeft;
+        this.moonEle.addEventListener('mousedown', e => {
+          flag = true;
+          startX = e.clientX;
+          offsetLeft = this.moonEle.offsetLeft
+        })
+        document.addEventListener('mousemove', e => {
+          if (!flag) return;
+          moveX = e.clientX - startX;
+          var left = offsetLeft + moveX;
+          this.moonEle.style.left = left + 'px';
+          this.isCoincide(left);
+        })
+        document.addEventListener('mouseup', e => {
+          flag = false;
+        })
+      },
+      isCoincide: function (left) {
+        var sunL = this.sunOffsetLeft,
+          sunR = this.sunOffsetLeft + this.circleWidth,
+          moonL = left,
+          moonR = left + this.circleWidth;
+
+        if (moonL > sunR || moonR < sunL) { // 没有重合
+          // 停止播放音乐
+          this.audio.pause();
+        } else { // 有重合
+          // 播放音乐
+          this.audio.play();
+          var per = this.calcPer(sunR, moonL, sunL, moonR);
+          this.audio.volume = per;
+          console.log(per)
+          this.moonEle.style.background = `hsl(194, 66%, ${(1 - per) * 60}%)`
+          this.body.style.background = `hsl(${194 + Math.floor(166 * per)}, 66%, ${(1 - per) * 50}%)`
+        }
+      },
+      calcPer: function (sunR, moonL, sunL, moonR) {
+        if (sunR >= moonL && sunL <= moonL) {
+          return (sunR - moonL) / this.circleWidth
+        }
+        if (sunL <= moonR && moonL <= sunL) {
+          return (moonR - sunL) / this.circleWidth
+        }
+      }
+    }
+
+    obj.run();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-01-10 15:40:34
+ * @LastEditTime: 2021-01-12 11:11:06
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \优购d:\Backup\桌面\常用重要文件\StudySpace\javaScript_study\前端常见交互例子\二级联动\二级联动.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二级联动</title>
+  <style>
+    ul{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      width: 150px;
+      height: 250px;
+      max-height: 250px;
+      overflow-y: auto;
+      outline: 1px solid black;
+      float: left;
+    }
+    ul::-webkit-scrollbar {
+      width: 10px;
+      height: 0;
+      background-color: #f1f2f3;
+    }
+    /* 滚动条滑块 */
+    ul::-webkit-scrollbar-thumb {
+      border-radius: 6px;
+      background-color: #d1d4db;
+    }
+    ul li {
+      width: 100%;
+      padding: 10px 0;
+      text-align: center;
+      cursor: pointer;
+    }
+    ul li.active {
+      background-color: #f2f5f9;
+    }
+  </style>
+</head>
+<body>
+  
+  <ul class="tree">
+  </ul>
+  <ul class="tree">
+  </ul>
+
+  <script>
+    var linkage = {
+      tree: document.getElementsByClassName('tree'),
+      tree_lis: document.getElementsByClassName('tree-li'),
+      current: 0,
+      data: {
+        1: ['1-1','1-2'],
+        2: ['2-1','2-2','2-3','2-4','2-5','2-6', '2-7'],
+        3: ['3-1'],
+        4: ['4-1','4-2'],
+        5: ['5-1'],
+        6: ['6-1'],
+        7: ['7-1'],
+        8: ['8-1']
+      },
+      init: function () {
+        this.initdom();
+        this.initSecondul();
+        this.addActive();
+      },
+      initdom: function () {
+        var lis = '';
+        for (let key in this.data) {
+          lis += `<li class="tree-li">${key}</li>`
+        }
+        this.tree[0].innerHTML = lis;
+      },
+      addActive: function () {
+        var lis = Array.from(this.tree_lis);
+        lis.forEach((ele,ind) => {
+          ele.index = ind;
+          ele.addEventListener('mouseenter', e => {
+            for (let i = 0; i < lis.length; i ++) {
+              this.tree_lis[i].classList.remove('active')
+              if (e.target.index === i) {
+                this.tree_lis[i].classList.add('active')
+                this.current = e.target.index;
+                this.initSecondul();
+              }
+            }
+          })
+        });
+      },
+      // 初始化第二个 ul 的数据
+      initSecondul: function () {
+        var lis = '';
+        var currData = this.data[this.current+1];
+        for (let i = 0; i < currData.length; i ++) {
+          lis += `<li>${currData[i]}</li>`
+        }
+        this.tree[1].innerHTML = lis;
+      }
+      // 判断数据有几层，就生成几个和 tree 相同大小的 div，
+      // createOther: function () {
+      //   var ul = document.createElement('ul');
+        
+      // }
+    }
+    linkage.init();
+  </script>
+</body>
+</html>

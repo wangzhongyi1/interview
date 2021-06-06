@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原生js小游戏--别踩白块</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+
+    .wrapper .start {
+      padding: 50px 0;
+      font-size: 60px;
+      color: cyan;
+      cursor: pointer;
+      visibility: visible;
+      width: 400px;
+      margin: 0 auto;
+      animation: s 2.2s ease-in-out infinite alternate;
+    }
+
+    .wrapper .content {
+      width: 400px;
+      height: 600px;
+      border: 1px solid red;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wrapper .content .row {
+      display: flex;
+      width: 100%;
+      position: absolute;
+      top: -150px;
+    }
+
+    .wrapper .content .row .col {
+      flex: 1;
+      height: 149px;
+      border-left: 1px solid black;
+      border-bottom: 1px solid black;
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+
+    .black {
+      background-color: black;
+    }
+
+    .wrapper .content .row .col:first-child {
+      border-left: none;
+    }
+
+    @keyframes s {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(0.5);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <div class="start">Game Start</div>
+    <div class="content">
+      <!-- <div class="row">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col"></div>
+      </div> -->
+    </div>
+  </div>
+
+  <script>
+    var start = document.querySelector('.start');
+
+    var obj = {
+      conEle: document.getElementsByClassName('content')[0],
+      conEleHeight: parseInt(getComputedStyle(document.getElementsByClassName('content')[0]).height),
+      timer: [],
+      flagArr: [],
+      speed: 5,
+      index: 0,
+      grade: 0, // 得分
+      gameStart: true,
+      colorArr: ['red', 'green', 'yellow', 'black'],
+      run: function () {
+        // 创建 row 和 col,然后向下运动，到达 top: 0; 的地方再重新创建插入前面
+        this.createEle();
+      },
+      createEle: function () {
+        var row = document.createElement('div');
+        row.classList.add('row');
+        var random = Math.floor(Math.random() * 4);
+        for (var i = 0; i < 4; i++) {
+          var col = document.createElement('div');
+          col.classList.add('col');
+          if (random === i) {
+            col.classList.add(this.colorArr[i]);
+            col.classList.add('click');
+          };
+          row.appendChild(col);
+          // row.classList.contains
+          row.setAttribute('data-ind', this.index);
+        }
+        this.clickDiv(row);
+        if (this.conEle.children.length) {
+          this.conEle.insertBefore(row, this.conEle.children[0]);
+        } else {
+          this.conEle.appendChild(row);
+        }
+        this.move(row, this.index++);
+        if (this.index === 5) {
+          this.index = 0;
+        }
+      },
+      move: function (row, index) {
+        this.flagArr[index] = true;
+        this.timer[index] = setInterval(() => {
+          var top = parseInt(getComputedStyle(row).top);
+          top = top + this.speed;
+
+          if (this.flagArr[index] && top >= 0) {
+            // 创建新的 row 
+            this.flagArr[index] = false;
+            // debugger;
+            this.createEle();
+          }
+          row.style.top = top + 'px';
+          // 超出红色下边框底部，就移除这个 row
+          if (!this.flagArr[index] && top >= this.conEleHeight) {
+            // 停止游戏
+            Array.from(row.children).forEach(v => {
+              if (v.classList.contains('click')) {
+                this.gameStart = false;
+                this.timer.forEach(v2 => clearInterval(v2));
+                alert('游戏结束，得分是：' + this.grade + '分');
+              }
+            })
+            this.conEle.removeChild(row);
+            clearInterval(this.timer[index]);
+          }
+
+        }, 20);
+      },
+      clickDiv: function (row) {
+        row.addEventListener('click', e => {
+          if (this.gameStart) {
+            var t = e.target;
+            if (t.classList.contains('click')) {
+              this.grade += 2;
+              t.style.backgroundColor = '#ccc';
+              t.classList.remove('click');
+            } else {
+              // 点击白块，停止游戏
+              this.gameStart = false;
+              this.timer.forEach(v => clearInterval(v))
+              alert('游戏结束，得分是：' + this.grade + '分');
+            }
+          }
+
+        })
+      }
+    }
+    
+    start.addEventListener('click', e => {
+      start.style.visibility = 'hidden'
+      obj.run();
+    })
+  </script>
+</body>
+
+</html>

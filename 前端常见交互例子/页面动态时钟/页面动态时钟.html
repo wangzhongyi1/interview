@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js实现页面动态时钟</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      overflow: hidden;
+      background-color: #0e141b;
+    }
+
+    .wrapper .column {
+      display: inline-block;
+      vertical-align: top;
+      transition: transform .3s ease;
+      transform: translateY(calc(50vh - 40px));
+      color: rgba(224, 230, 235, .89);
+    }
+
+    .wrapper .column .num {
+      font-size: 80px;
+      line-height: 80px;
+    }
+
+    .wrapper .column .num.current {
+      opacity: 1;
+    }
+    .wrapper .column .num.close {
+      opacity: .8;
+    }
+    .wrapper .column .num.far {
+      opacity: .5;
+    }
+    .wrapper .column .num.distance {
+      opacity: .3;
+    }
+
+    .wrapper .colon {
+      display: inline-block;
+      font-size: 80px;
+      line-height: 80px;
+      transform: translateY(calc(50vh - 40px));
+      margin-top: -10px;
+      margin-left: 20px;
+      margin-right: 20px;
+      color: rgba(224, 230, 235, .89);
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div class="wrapper">
+    <div class="column">
+      <div class="num">0</div>
+      <div class="num">1</div>
+      <div class="num">2</div>
+    </div>
+    <div class="column">
+      <div class="num">0</div>
+      <div class="num">1</div>
+      <div class="num">2</div>
+      <div class="num">3</div>
+      <div class="num">4</div>
+      <div class="num">5</div>
+      <div class="num">6</div>
+      <div class="num">7</div>
+      <div class="num">8</div>
+      <div class="num">9</div>
+    </div>
+    <div class="colon">:</div>
+    <div class="column">
+      <div class="num">0</div>
+      <div class="num">1</div>
+      <div class="num">2</div>
+      <div class="num">3</div>
+      <div class="num">4</div>
+      <div class="num">5</div>
+      <div class="num">6</div>
+      <div class="num">7</div>
+      <div class="num">8</div>
+      <div class="num">9</div>
+    </div>
+    <div class="column">
+      <div class="num">0</div>
+      <div class="num">1</div>
+      <div class="num">2</div>
+      <div class="num">3</div>
+      <div class="num">4</div>
+      <div class="num">5</div>
+      <div class="num">6</div>
+      <div class="num">7</div>
+      <div class="num">8</div>
+      <div class="num">9</div>
+    </div>
+    <div class="colon">:</div>
+    <div class="column">
+      <div class="num">0</div>
+      <div class="num">1</div>
+      <div class="num">2</div>
+      <div class="num">3</div>
+      <div class="num">4</div>
+      <div class="num">5</div>
+      <div class="num">6</div>
+      <div class="num">7</div>
+      <div class="num">8</div>
+      <div class="num">9</div>
+    </div>
+    <div class="column">
+      <div class="num">0</div>
+      <div class="num">1</div>
+      <div class="num">2</div>
+      <div class="num">3</div>
+      <div class="num">4</div>
+      <div class="num">5</div>
+      <div class="num">6</div>
+      <div class="num">7</div>
+      <div class="num">8</div>
+      <div class="num">9</div>
+    </div>
+  </div>
+
+  <script>
+    // 获取当前时间，并显示
+    var obj = {
+      // 根据距离设置不同的 opacity, 达到文字颜色层次
+      farArr: ['current', 'close', 'far', 'far', 'distance', 'distance'],
+      columns: document.getElementsByClassName('column'),
+      timer: null,
+      run: function () {
+        this.startInterval();
+      },
+      startInterval: function () {
+        var _this = this;
+        this.timer = setInterval(function () {
+          var timeStr = _this.getTime();
+          Array.from(_this.columns).forEach(function (ele, index) {
+            // 每个 column 对应要显示的数字
+            var showNumber = Number(timeStr[index]);
+            // 将要显示的数字移动到对应的位置
+            ele.style.transform = 'translateY(calc(50vh - 40px - ' + (showNumber * 80) + 'px))'
+            // 给距离 showNumber 不同距离远的数字 设置不同的文字颜色
+            Array.from(ele.children).forEach(function (ele2, index2) {
+              var cls = _this.farArr[Math.abs(showNumber - index2)];
+              if (!cls) { // 可能出现 undefined ,所以直接赋值 distance
+                cls = 'distance'
+              }
+              ele2.className = 'num ' + cls
+            })
+          })
+        }, 1000);
+      },
+      getTime: function () {
+        var d = new Date();
+        var h = ('0' + d.getHours()).slice(-2),
+          m = ('0' + d.getMinutes()).slice(-2),
+          s = ('0' + d.getSeconds()).slice(-2);
+        return h + m + s;
+      }
+    }
+    obj.run();
+  </script>
+</body>
+
+</html>
