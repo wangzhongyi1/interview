@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端小例子-日历</title>
+    <style>
+        .container {
+            margin: 100px auto;
+            width: 500px;
+            padding: 20px;
+            border: 1px solid black;
+        }
+
+        .top-c {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .top-c .lastmonth,
+        .top-c .nextmonth {
+            cursor: pointer;
+            color: aqua;
+            user-select: none;
+        }
+
+        .top-c .currmonth {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        ul {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        li {
+            list-style: none;
+            width: 14.285714285714285%;
+            /* 每个 li 占 七分之一 */
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .day {
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="top-c">
+            <span class="lastmonth">上一月</span>
+            <div class="currmonth">
+                <span class="year">2020</span>
+                <span class="month">2月</span>
+            </div>
+            <span class="nextmonth">下一月</span>
+        </div>
+
+        <ul class="weektitle">
+            <li>日</li>
+            <li>一</li>
+            <li>二</li>
+            <li>三</li>
+            <li>四</li>
+            <li>五</li>
+            <li>六</li>
+        </ul>
+
+        <ul class="day"></ul>
+    </div>
+
+
+    <script>
+
+        var oYear = document.querySelector('.year');
+        var oMonth = document.querySelector('.month');
+        var oDay = document.querySelector('.day');
+        var oLastMonth = document.querySelector('.lastmonth');
+        var oNextMonth = document.querySelector('.nextmonth');
+
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = d.getMonth();
+        var d = d.getDate();
+
+        oLastMonth.onclick = function () {
+            var flag = m - 1 < 0;
+            m = flag ? 11 : m-1;
+            y = flag ? y-1 : y;
+            console.log(m, y);
+            createCalendar(y, m);
+        }
+        oNextMonth.onclick = function () {
+            var flag = m + 1 > 11
+            m = flag ? 0 : m+1;
+            y = flag ? y+1 : y;
+            createCalendar(y, m);
+        }
+
+        createCalendar(y, m);
+        function createCalendar(y, m) {
+            oYear.innerHTML = y + '年';
+            oMonth.innerHTML = m + 1 + '月';
+
+            //1. 如何获取当月有多少天？
+
+            var temp = new Date(y, m + 1, 0) //通过下个月第一天往前倒推一天，就是本月的最后一天
+            var muchDays = temp.getDate();
+
+            //2. 如何得知当月第一天是星期几？
+
+            var temp2 = new Date(y, m, 1); //把时间定位到当月的第一天
+            var firstDay = temp2.getDay();
+
+            //3. 使用循环生成 li 插入到 ul.day 中
+
+            var html = ``
+            //3.1 第一个循环用于定位本月第一天对应星期几下面
+            for (let i = 0; i < firstDay; i++) {
+                html += `<li></li>`
+            }
+            //3.2 第二个循环用于生成本月的所有日期
+            for (let j = 0; j < muchDays; j++) {
+                html += `<li>${j + 1}</li>`
+            }
+
+            oDay.innerHTML = html
+        }
+
+
+    </script>
+
+</body>
+
+</html>
