@@ -5,8 +5,8 @@
 - `promise` 是一个包含了兼容 promise 规范 then 方法的对象或函数
 - `thenable` 是一个包含了 then 方法的对象或函数
 - `value` 是任何 javascript 的值（包括 undefined、thenable、promise等）
-- `exception` 是由 throw 表达式抛出来的值
-- `reason` 是一个用于表述 promise 被拒绝原因的值
+- `exception` 是由 throw 语句抛出来的值
+- `reason` 是一个用于表述 promise 被拒绝的原因
 
 ****
 
@@ -15,7 +15,7 @@
 > 一个 Promise 必须处在其中之一的状态：pending、fulfilled、rejected
 - 初始状态为 pending，pending状态可以转化为 fulfilled 状态或 rejected 状态
 - 如果是 fulfilled 状态，则不能转化为其他任何状态，必须有一个值，且这个值不能被改变
-- 如果是 rejected 状态，则不能转化为其他任何状态，必须有一个原因，且这个值不能被改变
+- 如果是 rejected 状态，则不能转化为其他任何状态，必须有一个原因，且这个表示原因的值不能被改变
 
 ### 2.2 then 方法
 > 一个 Promise 必须提供一个 then 方法来获取其值或原因。
@@ -134,10 +134,10 @@ class Promise {
 > 第二部分：
 ```js
 /*思路：
-    1. 调用 then 方法 时注册可以注册两个回调函数
+    1. 调用 then 方法 时可以注册两个回调函数
     2. 第一个表示成功的回调，第二个表示失败的回调
     3. 只能有一个被调用
-    4. 需要先组册，后调用（异步）
+    4. 需要先注册，后调用（异步）
     5. 可以多次调用 then 方法
 */
 
@@ -439,3 +439,10 @@ class Promise {
     }
 }
 ```
+
+> tip: https://chromium.googlesource.com/v8/v8/+/3.29.45/src/promise.js
+
+## 感想
+- 在前端这个领域，入门很简单，想要深入真的很难！
+- 未来还有很多东西值得我们探索，但是我们不要心急，一步一步来，即使慢一点也没关系，走得扎实才是最重要的！
+- 最后祝愿大家在新的一年里能够收获满满！！！
