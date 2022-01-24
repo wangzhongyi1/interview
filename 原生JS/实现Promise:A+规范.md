@@ -126,7 +126,7 @@ class Promise {
         try {
             executor(resolve, reject)
         }catch(e){
-            reject();
+            reject(e);
         }
     }
 }
@@ -178,7 +178,7 @@ class Promise {
         try {
             executor(resolve, reject);
         }catch(e){
-            reject();
+            reject(e);
         }
     }
 
@@ -234,7 +234,7 @@ class Promise {
         try {
             executor(resolve, reject);
         }catch(e){
-            reject();
+            reject(e);
         }
     }
 
@@ -328,7 +328,7 @@ class Promise {
         try {
             executor(resolve, reject);
         }catch(e){
-            reject();
+            reject(e);
         }
     }
 
