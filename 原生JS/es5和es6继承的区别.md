@@ -56,3 +56,4 @@ Children.prototype.getJob = function () {
     + 其实es6 class中，constructor调用是有返回值的，返回的就是this
         * 所以调用super，就相当于调用父类的constructor函数
         * 在父类中创建this，然后返回给子类使用
+> 参考：https://juejin.cn/post/6844903550636523533
