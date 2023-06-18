@@ -2,13 +2,14 @@
 
 ## 什么是BFC
 
+- W3C CSS 2.1 规范中的一个概念,它决定了元素如何对其内容进行定位,以及与其他元素的关 系和相互作用。
 - bfc 直译为 `块级格式化上下文`，是 `css2.1` 中的一个规范，他是独立的渲染区域，决定了元素内容如何进行定位，以及与其他元素的关系和相互作用。
 
 ## 如何形成 BFC
 
 - float 除 none 以外的值
 - positino 为 absolute 或 fixed
-- display: inline-block（或者 table-cells, table-captions）
+- display: flex、inline-block（或者 table-cells, table-captions）
 - overflow 除 visible 以外的值（hidden, auto, scroll）
 
 ## 如何清楚浮动（BFC 产生的副作用）
