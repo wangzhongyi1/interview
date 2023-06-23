@@ -19,4 +19,6 @@
 
 4. vue3支持多根节点，最终都会使用 Fragment 包裹，而 vue2 只能有一个跟节点
 
-5. v-for 和 v-if 优先级不同
+5. vue3相比于vue2拥有更好的 typescript 支持
+
+6. v-for 和 v-if 优先级不同
